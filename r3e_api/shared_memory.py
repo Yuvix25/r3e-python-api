@@ -205,7 +205,7 @@ def convert(infile, outfile=None):
 
 
 def get_value(data, field, converted_data):
-    positions = convert('./r3e-api/data.cs', 'Shared')
+    positions = convert('./r3e_api/data.cs', 'Shared')
 
     for field_name in field.split('.'):
         if field_name not in positions['children']:
@@ -223,8 +223,8 @@ class R3ESharedMemory:
         self._mmap_data = None
         self._converted_data = None
     
-    def update_positions(self):
-        self._converted_data = convert('./r3e-api/data.cs')
+    def update_offsets(self):
+        self._converted_data = convert('./r3e_api/data.cs')
     
     @property
     def mmap_data(self):
@@ -236,7 +236,7 @@ class R3ESharedMemory:
     @property
     def converted_data(self):
         if self._converted_data is None:
-            self.update_positions()
+            self.update_offsets()
         return self._converted_data
 
     def update_buffer(self):

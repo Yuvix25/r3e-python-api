@@ -3,14 +3,17 @@ This package will allow you to easily read data from RaceRoom's Shared Memory AP
 
 ## Usage:
 ```python
-import r3e-api as r3e
-import mmap, time
+from r3e_api import R3ESharedMemory
+import time
 
-mmap_file = mmap.mmap(-1, 40960, "Local\\$R3E",  access=mmap.ACCESS_READ) # read the shared memory file
+shared_memory = R3ESharedMemory()
+shared_memory.update_offsets() # only needed once
 
 while True:
-    mmap_file.seek(0)
-    data = mmap_file.read()
-    print(r3e.get_value(data, "DriverInfo")) # for more valid keys, take a look at data.cs
-    time.sleep(0.1)
+    shared_memory.update_buffer()
+    print(shared_memory.get_value('Player'))
+
+    time.sleep(0.5)
 ```
+
+The method `R3ESharedMemory.get_value()` accepts one string field. If you want to retrieve a sub-field, you can use dot notation, for example, `R3ESharedMemory.get_value('Player.Velocity')`.
