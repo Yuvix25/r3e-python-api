@@ -2,10 +2,12 @@ import re
 import mmap
 import json
 import struct
+import pkg_resources
 
 SIZES = {'Int32': 4, 'Int16': 2, 'Int8': 1, 'Float32': 4, 'Float64': 8, 'Double': 8, 'Single': 4, 'UInt32': 4, 'UInt16': 2, 'UInt8': 1, 'Int64': 8, 'UInt64': 8, 'Boolean': 1, 'Byte': 1, 'SByte': 1, 'Char': 2, 'String': 4, 'Void': 0, 'byte': 1, 'sbyte': 1, 'char': 2, 'string': 4, 'void': 0}
 STRUCT_TYPES = {'Single': 'f', 'Double': 'd', 'Int32': 'i', 'Int16': 'h', 'Int8': 'b', 'Float32': 4, 'Float64': 8, 'UInt32': 'I', 'UInt16': 'H', 'UInt8': 'B', 'Int64': 'q', 'UInt64': 'Q', 'Boolean': '?', 'Byte': 'B', 'SByte': 'b', 'Char': 'c', 'String': 's', 'Void': 'x', 'byte': 'B', 'sbyte': 'b', 'char': 'c', 'string': 's', 'void': 'x'}
 
+DATA_FILE = pkg_resources.resource_filename('r3e_api', 'data/data.cs')
 
 def get_struct_string(positions):
     res = ''
@@ -193,7 +195,6 @@ def read_struct_positions(data, struct_name, generic_type=None, start=0):
 def convert(infile, outfile=None):
     data = open(infile, 'r').read()
 
-    # data = data.replace('    ', '').replace('\t', '').replace('\r', '').split('\n')
     data = re.sub(r'\n\s+', '\n', data).replace('\t', '').replace('\r', '').split('\n')
 
     res = read_struct_positions(data, 'Shared')
@@ -204,8 +205,8 @@ def convert(infile, outfile=None):
     return res
 
 
-def get_value(data, field, converted_data):
-    positions = convert('./r3e_api/data.cs', 'Shared')
+def get_value(data, field):
+    positions = convert(DATA_FILE)
 
     for field_name in field.split('.'):
         if field_name not in positions['children']:
@@ -224,7 +225,7 @@ class R3ESharedMemory:
         self._converted_data = None
     
     def update_offsets(self):
-        self._converted_data = convert('./r3e_api/data.cs')
+        self._converted_data = convert(DATA_FILE)
     
     @property
     def mmap_data(self):
@@ -247,7 +248,7 @@ class R3ESharedMemory:
         return self._mmap_data
     
     def get_value(self, field):
-        return get_value(self._mmap_data, field, self.converted_data)
+        return get_value(self._mmap_data, field)
 
 if __name__ == '__main__':
     shared = R3ESharedMemory()
