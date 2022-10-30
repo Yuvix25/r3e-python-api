@@ -6,7 +6,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name='r3e-api',
-    description='Python binding for RaceRoom\'s Shared Memory API.',
+    description='Python bindings for RaceRoom Racing Experience\'s Shared Memory API.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     version='0.1.2',    

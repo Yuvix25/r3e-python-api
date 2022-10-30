@@ -17,3 +17,9 @@ while True:
 ```
 
 The method `R3ESharedMemory.get_value()` accepts one string field. If you want to retrieve a sub-field, you can use dot notation, for example, `R3ESharedMemory.get_value('Player.Velocity')`.
+
+## Installation:
+You can install this package using [pip](https://pypi.org/project/r3e-api/):
+```bash
+$ pip install r3e-api
+```
